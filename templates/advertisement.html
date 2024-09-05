@@ -1,0 +1,11 @@
+{% extends 'fpages/default.html' %}
+
+<!-- Название у нас будет Product -->
+{% block title %}
+Advertisement
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+<h1>{{ advertisement }}</h1>
+{% endblock content %}

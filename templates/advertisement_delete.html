@@ -1,0 +1,11 @@
+{% extends 'fpages/default.html' %}
+
+{% block content %}
+<h1>Удаление объявлния</h1>
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+    <p>Удаляем "{{ object.heading }}"?</p>
+    <input type="submit" value="DELETE" />
+</form>
+{% endblock content %}

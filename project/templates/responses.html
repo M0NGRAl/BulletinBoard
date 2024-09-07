@@ -1,0 +1,74 @@
+{% extends 'fpages/default.html' %}
+
+{% block content %}
+   <h1>Отклики</h1>
+   <h3>{{ responses|length }} откликов</h3>
+
+   <a href="{% url 'advertisement_list' %}" class="btn">Объявлния</a>
+
+   <form method="get">
+       {{ filterset.form.as_p }}
+       <button type="submit">Фильтровать</button>
+   </form>
+
+   <hr>
+   {% if responses %}
+       <table>
+           <tr>
+               <th>Объявление</th>
+               <th>Содержание</th>
+               <th>Действия</th>
+           </tr>
+
+           {% for response in responses %}
+           <tr>
+               <td>{{ response.advertisement }}</td>
+               <td>{{ response.text }}</td>
+               <td>
+                    {% if not response.answer %}
+                        <!-- Кнопка для принятия отклика -->
+                        <form action="{% url 'responses' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="response_id" value="{{ response.id }}">
+                            <input type="hidden" name="action" value="accept">
+                            <button type="submit">Принять</button>
+                        </form>
+                        <!-- Кнопка для удаления отклика -->
+                        <form action="{% url 'responses' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="response_id" value="{{ response.id }}">
+                            <input type="hidden" name="action" value="delete">
+                            <button type="submit">Удалить</button>
+                        </form>
+                    {% else %}
+                        <span>Принято</span>
+                    {% endif %}
+               </td>
+           </tr>
+
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Откликов нет!</h2>
+   {% endif %}
+
+   <!-- Добавляем пагинацию на страницу -->
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if page_obj.paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+{% endblock content %}
